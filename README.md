@@ -77,7 +77,7 @@ This application uses a microservices architecture with the following components
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/monitoring-system.git
+   git clone https://github.com/sauufi/monitoring-system.git
    cd monitoring-system
    ```
 
