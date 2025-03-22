@@ -1,41 +1,43 @@
 {
-    "name": "monitoring-system",
-    "version": "1.0.0",
-    "description": "A comprehensive monitoring system with microservices architecture",
-    "private": true,
-    "workspaces": [
-      "gateway",
-      "services/*",
-      "frontend"
-    ],
-    "scripts": {
-      "start": "docker-compose up -d",
-      "stop": "docker-compose down",
-      "dev": "docker-compose -f docker-compose.dev.yml up",
-      "lint": "eslint .",
-      "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "build": "docker-compose build",
-      "install:all": "npm install && npm run install:services && npm run install:frontend",
-      "install:services": "cd services/auth-service && npm install && cd ../monitoring-service && npm install && cd ../notification-service && npm install && cd ../status-page-service && npm install",
-      "install:frontend": "cd frontend && npm install"
-    },
-    "keywords": [
-      "monitoring",
-      "microservices",
-      "status-page",
-      "nodejs",
-      "react"
-    ],
-    "author": "",
-    "license": "MIT",
-    "devDependencies": {
-      "eslint": "^8.38.0",
-      "eslint-plugin-react": "^7.32.2",
-      "prettier": "^2.8.7"
-    },
-    "engines": {
-      "node": ">=16.0.0",
-      "npm": ">=8.0.0"
-    }
-  }
+  "name": "monitoring-system",
+  "version": "1.0.0",
+  "description": "Comprehensive system for monitoring websites, services, and infrastructure",
+  "scripts": {
+    "start": "docker-compose up -d",
+    "stop": "docker-compose down",
+    "dev": "docker-compose -f docker-compose.dev.yml up",
+    "install:all": "npm run install:frontend && npm run install:gateway && npm run install:services",
+    "install:frontend": "cd frontend && npm install",
+    "install:gateway": "cd gateway && npm install",
+    "install:services": "cd services/auth-service && npm install && cd ../monitoring-service && npm install && cd ../notification-service && npm install && cd ../status-page-service && npm install",
+    "lint": "npm run lint:frontend && npm run lint:gateway && npm run lint:services",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:gateway": "cd gateway && npm run lint",
+    "lint:services": "cd services/auth-service && npm run lint && cd ../monitoring-service && npm run lint && cd ../notification-service && npm run lint && cd ../status-page-service && npm run lint",
+    "test": "npm run test:frontend && npm run test:gateway && npm run test:services",
+    "test:frontend": "cd frontend && npm test",
+    "test:gateway": "cd gateway && npm test",
+    "test:services": "cd services/auth-service && npm test && cd ../monitoring-service && npm test && cd ../notification-service && npm test && cd ../status-page-service && npm test"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sauufi/monitoring-system.git"
+  },
+  "keywords": [
+    "monitoring",
+    "uptime",
+    "status-page",
+    "microservices",
+    "nodejs",
+    "react"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sauufi/monitoring-system/issues"
+  },
+  "homepage": "https://github.com/sauufi/monitoring-system#readme"
+}

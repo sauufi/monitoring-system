@@ -1,31 +1,37 @@
 {
-    "name": "auth-service",
-    "version": "1.0.0",
-    "description": "Authentication service for the monitoring system",
-    "main": "app.js",
-    "scripts": {
-      "start": "node app.js",
-      "dev": "nodemon app.js",
-      "test": "jest"
-    },
-    "dependencies": {
-      "bcryptjs": "^2.4.3",
-      "cors": "^2.8.5",
-      "dotenv": "^16.0.3",
-      "express": "^4.18.2",
-      "express-rate-limit": "^6.7.0",
-      "helmet": "^6.1.5",
-      "jsonwebtoken": "^9.0.0",
-      "mongoose": "^7.0.4",
-      "morgan": "^1.10.0",
-      "nodemailer": "^6.9.1"
-    },
-    "devDependencies": {
-      "jest": "^29.5.0",
-      "nodemon": "^2.0.22",
-      "supertest": "^6.3.3"
-    },
-    "engines": {
-      "node": ">=16.0.0"
-    }
+  "name": "auth-service",
+  "version": "1.0.0",
+  "description": "Authentication service for the Monitoring System",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^6.15.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.2",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.36.0",
+    "jest": "^29.5.0",
+    "nodemon": "^2.0.21",
+    "supertest": "^6.3.3"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
+}
