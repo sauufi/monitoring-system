@@ -1,0 +1,41 @@
+{
+    "name": "monitoring-system",
+    "version": "1.0.0",
+    "description": "A comprehensive monitoring system with microservices architecture",
+    "private": true,
+    "workspaces": [
+      "gateway",
+      "services/*",
+      "frontend"
+    ],
+    "scripts": {
+      "start": "docker-compose up -d",
+      "stop": "docker-compose down",
+      "dev": "docker-compose -f docker-compose.dev.yml up",
+      "lint": "eslint .",
+      "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "build": "docker-compose build",
+      "install:all": "npm install && npm run install:services && npm run install:frontend",
+      "install:services": "cd services/auth-service && npm install && cd ../monitoring-service && npm install && cd ../notification-service && npm install && cd ../status-page-service && npm install",
+      "install:frontend": "cd frontend && npm install"
+    },
+    "keywords": [
+      "monitoring",
+      "microservices",
+      "status-page",
+      "nodejs",
+      "react"
+    ],
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+      "eslint": "^8.38.0",
+      "eslint-plugin-react": "^7.32.2",
+      "prettier": "^2.8.7"
+    },
+    "engines": {
+      "node": ">=16.0.0",
+      "npm": ">=8.0.0"
+    }
+  }

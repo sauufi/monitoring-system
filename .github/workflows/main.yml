@@ -1,0 +1,143 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Lint and test backend services
+  backend-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [auth-service, monitoring-service, notification-service, status-page-service, gateway]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        cache: 'npm'
+        cache-dependency-path: services/${{ matrix.service }}/package-lock.json
+
+    - name: Install dependencies
+      run: cd services/${{ matrix.service }} && npm ci
+      
+    - name: Lint service
+      run: cd services/${{ matrix.service }} && npm run lint --if-present
+      
+    - name: Test service
+      run: cd services/${{ matrix.service }} && npm test --if-present
+
+  # Test and build frontend
+  frontend-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+        
+    - name: Install dependencies
+      run: cd frontend && npm ci
+      
+    - name: Lint frontend
+      run: cd frontend && npm run lint --if-present
+      
+    - name: Test frontend
+      run: cd frontend && npm test -- --passWithNoTests
+      
+    - name: Build frontend
+      run: cd frontend && npm run build
+      
+    - name: Upload frontend build
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-build
+        path: frontend/build
+
+  # Docker build and push (only on main branch)
+  build-and-push:
+    needs: [backend-test, frontend-test]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+      
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Build and push Gateway
+      uses: docker/build-push-action@v4
+      with:
+        context: ./gateway
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/monitoring-gateway:latest
+        
+    - name: Build and push Auth Service
+      uses: docker/build-push-action@v4
+      with:
+        context: ./services/auth-service
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/monitoring-auth-service:latest
+        
+    - name: Build and push Monitoring Service
+      uses: docker/build-push-action@v4
+      with:
+        context: ./services/monitoring-service
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/monitoring-monitoring-service:latest
+        
+    - name: Build and push Notification Service
+      uses: docker/build-push-action@v4
+      with:
+        context: ./services/notification-service
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/monitoring-notification-service:latest
+        
+    - name: Build and push Status Page Service
+      uses: docker/build-push-action@v4
+      with:
+        context: ./services/status-page-service
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/monitoring-status-page-service:latest
+        
+    - name: Build and push Frontend
+      uses: docker/build-push-action@v4
+      with:
+        context: ./frontend
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/monitoring-frontend:latest
+
+  # Deployment (example with SSH deployment to a VPS)
+  deploy:
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        key: ${{ secrets.DEPLOY_KEY }}
+        script: |
+          cd /opt/monitoring-system
+          git pull
+          docker-compose pull
+          docker-compose up -d

@@ -1,0 +1,180 @@
+version: "3.8"
+
+services:
+  # API Gateway
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - MONITORING_SERVICE_URL=http://monitoring-service:3002
+      - NOTIFICATION_SERVICE_URL=http://notification-service:3003
+      - STATUS_PAGE_SERVICE_URL=http://status-page-service:3004
+    volumes:
+      - ./gateway:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - auth-service
+      - monitoring-service
+      - notification-service
+      - status-page-service
+    restart: always
+    networks:
+      - app-network
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile.dev
+    environment:
+      - NODE_ENV=development
+      - AUTH_SERVICE_PORT=3001
+      - MONGO_URI=mongodb://mongo:27017/auth-service
+      - JWT_SECRET=your_jwt_secret_key_here
+    volumes:
+      - ./services/auth-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongo
+    restart: always
+    networks:
+      - app-network
+
+  # Monitoring Service
+  monitoring-service:
+    build:
+      context: ./services/monitoring-service
+      dockerfile: Dockerfile.dev
+    environment:
+      - NODE_ENV=development
+      - MONITORING_SERVICE_PORT=3002
+      - MONGO_URI=mongodb://mongo:27017/monitoring-service
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - NOTIFICATION_SERVICE_URL=http://notification-service:3003
+    volumes:
+      - ./services/monitoring-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongo
+      - auth-service
+    restart: always
+    networks:
+      - app-network
+
+  # Notification Service
+  notification-service:
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile.dev
+    environment:
+      - NODE_ENV=development
+      - NOTIFICATION_SERVICE_PORT=3003
+      - MONGO_URI=mongodb://mongo:27017/notification-service
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - SMTP_HOST=smtp.example.com
+      - SMTP_PORT=587
+      - SMTP_SECURE=false
+      - SMTP_USER=your_email@example.com
+      - SMTP_PASSWORD=your_email_password
+      - EMAIL_FROM=monitoring@example.com
+      - WHATSAPP_ACCESS_TOKEN=your_whatsapp_access_token
+      - WHATSAPP_PHONE_NUMBER_ID=your_whatsapp_phone_number_id
+    volumes:
+      - ./services/notification-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongo
+      - auth-service
+    restart: always
+    networks:
+      - app-network
+
+  # Status Page Service
+  status-page-service:
+    build:
+      context: ./services/status-page-service
+      dockerfile: Dockerfile.dev
+    environment:
+      - NODE_ENV=development
+      - STATUS_PAGE_SERVICE_PORT=3004
+      - MONGO_URI=mongodb://mongo:27017/status-page-service
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - MONITORING_SERVICE_INTERNAL_URL=http://monitoring-service:3002
+    volumes:
+      - ./services/status-page-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongo
+      - auth-service
+      - monitoring-service
+    restart: always
+    networks:
+      - app-network
+
+  # Frontend (Development)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "80:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:3000
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - gateway
+    restart: always
+    networks:
+      - app-network
+
+  # MongoDB
+  mongo:
+    image: mongo:5.0
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+    restart: always
+    networks:
+      - app-network
+
+  # Redis for caching and message queuing
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - app-network
+
+  # Mongo Express (MongoDB UI)
+  mongo-express:
+    image: mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=password
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+    restart: always
+
+volumes:
+  mongo-data:
+
+networks:
+  app-network:
+    driver: bridge
