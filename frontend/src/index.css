@@ -1,173 +1,107 @@
-/* Base styles */
+/* frontend/src/index.css */
 body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: #f8f9fa;
-  }
-  
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-      monospace;
-  }
-  
-  /* Dashboard layout */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 100;
-    padding: 48px 0 0;
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-  }
-  
-  .sidebar-sticky {
-    position: relative;
-    top: 0;
-    height: calc(100vh - 48px);
-    padding-top: .5rem;
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-  
-  .sidebar .nav-link {
-    font-weight: 500;
-    color: #333;
-  }
-  
-  .sidebar .nav-link.active {
-    color: #4CAF50;
-  }
-  
-  .sidebar .nav-link:hover {
-    color: #4CAF50;
-  }
-  
-  .sidebar-heading {
-    font-size: .75rem;
-    text-transform: uppercase;
-  }
-  
-  /* Main content */
-  main {
-    padding-top: 48px;
-  }
-  
-  @media (min-width: 768px) {
-    main {
-      padding-top: 0;
-    }
-  }
-  
-  /* Cards */
-  .card {
-    border-radius: 0.5rem;
-    border: none;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    transition: all 0.3s ease;
-  }
-  
-  .card:hover {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  }
-  
-  .card-header {
-    border-bottom: none;
-    background-color: rgba(0, 0, 0, 0.01);
-  }
-  
-  /* Login/Registration pages */
-  .auth-page {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f8f9fa;
-  }
-  
-  .auth-card {
-    max-width: 400px;
-    width: 100%;
-    padding: 2rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  }
-  
-  .auth-logo {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  /* Timeline styling for status page incidents */
-  .timeline {
-    position: relative;
-    padding-left: 30px;
-  }
-  
-  .timeline-item {
-    position: relative;
-    margin-bottom: 25px;
-  }
-  
-  .timeline-badge {
-    position: absolute;
-    left: -30px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    text-align: center;
-    background-color: #f8f9fa;
-    border: 2px solid #dee2e6;
-  }
-  
-  .timeline-badge i {
-    font-size: 12px;
-    line-height: 18px;
-  }
-  
-  .timeline-content {
-    padding-bottom: 10px;
-    border-bottom: 1px solid #e9ecef;
-  }
-  
-  .timeline-item:last-child .timeline-content {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-  
-  /* Status indicators */
-  .status-indicator {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin-right: 5px;
-  }
-  
-  .status-up {
-    background-color: #4CAF50;
-  }
-  
-  .status-down {
-    background-color: #F44336;
-  }
-  
-  .status-pending {
-    background-color: #FFC107;
-  }
-  
-  /* Utility classes */
-  .cursor-pointer {
-    cursor: pointer;
-  }
-  
-  .text-truncate-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Dashboard card stats hover effect */
+.card:hover {
+  transition: all 0.3s ease;
+}
+
+.dashboard .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Sidebar styles */
+.sidebar {
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+.sidebar .nav-link {
+  border-radius: 0.25rem;
+  margin: 0.1rem 0;
+  transition: all 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.sidebar .nav-link.active {
+  background-color: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+  font-weight: 500;
+}
+
+.sidebar-collapsed .nav-link {
+  text-align: center;
+  padding: 0.5rem;
+}
+
+/* Status colors */
+.status-up {
+  color: #198754;
+}
+
+.status-down {
+  color: #dc3545;
+}
+
+.status-pending {
+  color: #ffc107;
+}
+
+.status-paused {
+  color: #6c757d;
+}
+
+/* Timeline styling for incidents */
+.timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.timeline-badge {
+  position: absolute;
+  left: -30px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  text-align: center;
+  background-color: #f8f9fa;
+  border: 2px solid #dee2e6;
+}
+
+.timeline-badge i {
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.timeline-content {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.timeline-item:last-child .timeline-content {
+  border-bottom: none;
+  padding-bottom: 0;
+}
