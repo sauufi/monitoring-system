@@ -47,30 +47,32 @@ Use this checklist to ensure all required components are properly configured in 
 ### Monitoring Service
 
 - [x] `app.js` - Main application file
-- [ ] `package.json` - Dependencies
-- [ ] `models/` - Models for monitors and events
-- [ ] `routes/` - Route handlers
-- [ ] `middleware/` - Middleware functions
-- [ ] `config/` - Configuration
-- [ ] `utils/` - Utility functions
-- [ ] `tests/` - Unit and integration tests
+- [x] `package.json` - Dependencies
+- [x] `models/` - Models for monitors and events
+- [x] `routes/` - Route handlers
+- [x] `middleware/` - Middleware functions
+- [x] `config/` - Configuration
+- [x] `utils/` - Utility functions
+- [x] `tests/` - Unit and integration tests
 - [x] `Dockerfile` - Production Docker
-- [ ] `Dockerfile.dev` - Development Docker
-- [ ] `README.md` - Service documentation
+- [x] `Dockerfile.dev` - Development Docker
+- [x] `README.md` - Service documentation
 
 ### Notification Service
 
 - [x] `app.js` - Main application file
-- [ ] `package.json` - Dependencies
-- [ ] `models/` - Models for notifications and channels
-- [ ] `routes/` - Route handlers
-- [ ] `middleware/` - Middleware functions
-- [ ] `config/` - Configuration
-- [ ] `utils/` - Utility functions
+- [x] `package.json` - Dependencies
+- [x] `models/` - Models for notifications and channels
+- [x] `routes/` - Route handlers
+- [x] `middleware/` - Middleware functions
+- [x] `config/` - Configuration
+- [x] `utils/` - Utility functions
+- [x] `controllers/` - Controllers
+- [x] `services/` - Service integrations
 - [ ] `tests/` - Unit and integration tests
 - [x] `Dockerfile` - Production Docker
-- [ ] `Dockerfile.dev` - Development Docker
-- [ ] `README.md` - Service documentation
+- [x] `Dockerfile.dev` - Development Docker
+- [x] `README.md` - Service documentation
 
 ### Status Page Service
 
